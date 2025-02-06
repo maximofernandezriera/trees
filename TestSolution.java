@@ -1,42 +1,59 @@
-import Trees.*;
-
 public class TestSolution {
-
-    public static void main(String[] args) {
-
+    public static void main(String args[]) {
         try {
-            // Create leaf nodes (trees)
-            BTree watermelon = new DummyTree("Watermelon");
-            BTree apple = new DummyTree("Apple");
-            BTree grape = new DummyTree("Grape");
-            BTree lemon = new DummyTree("Lemon");
-            BTree banana = new DummyTree("Banana");
-            BTree cherry = new DummyTree("Cherry");
-            BTree berry = new DummyTree("Berry");
-            BTree orange = new DummyTree("Orange");
+            // Creamos los nodos que representan cada pregunta o fruto
+            BTree<String> colorGreen   = new DummyTree<String>("color=GREEN?");
+            BTree<String> sizeBig      = new DummyTree<String>("size=BIG?");
+            BTree<String> watermelon   = new DummyTree<String>("Watermelon");
+            BTree<String> sizeMedium   = new DummyTree<String>("size=MEDIUM?");
+            BTree<String> apple        = new DummyTree<String>("Apple");
+            BTree<String> grape        = new DummyTree<String>("Grape");
 
-            // Create internal nodes and connect them
-            BTree sizeMedium = new DummyTree("size is MEDIUM", apple, grape);
-            BTree shapeRound = new DummyTree("shape is ROUND", lemon, banana);
-            BTree tasteSweet = new DummyTree("taste is SWEET", cherry, berry);
-            
-            BTree sizeBig = new DummyTree("size is BIG", watermelon, sizeMedium);
-            BTree colorYellow = new DummyTree("color is YELLOW", shapeRound, tasteSweet, orange, null);
-           
+            BTree<String> colorYellow  = new DummyTree<String>("color=YELLOW?");
+            BTree<String> shapeRound   = new DummyTree<String>("shape=ROUND?");
+            BTree<String> lemon        = new DummyTree<String>("Lemon");
+            BTree<String> banana       = new DummyTree<String>("Banana");
+            BTree<String> sizeSmall    = new DummyTree<String>("size=SMALL?");
+            BTree<String> tasteSweet   = new DummyTree<String>("taste=SWEET?");
+            BTree<String> cherry       = new DummyTree<String>("Cherry");
+            BTree<String> berry        = new DummyTree<String>("Berry");
+            BTree<String> orange       = new DummyTree<String>("Orange");
 
-            // Create the root node and connect the final tree
-            BTree root = new DummyTree("color is GREEN", sizeBig, colorYellow);
+            // Enlazamos los nodos para formar el árbol de decisión
+            // Raíz: "color=GREEN?"
+            colorGreen.insert(sizeBig, BTree.LEFT);       // Si es "GREEN?" → tamaño grande
+            colorGreen.insert(colorYellow, BTree.RIGHT);  // Si NO es "GREEN?" → preguntamos si es "YELLOW?"
 
-            // Print the tree
-            System.out.println("Tree Structure:");
-            root.print();
+            // Subárbol "size=BIG?"
+            sizeBig.insert(watermelon, BTree.LEFT);       // Si es grande → Watermelon
+            sizeBig.insert(sizeMedium, BTree.RIGHT);      // Si NO es grande → preguntamos si es mediano
 
-            // Get tree properties
-            System.out.println("\nTree Size: " + root.size());
-            System.out.println("Tree Height: " + root.height());
+            // Subárbol "size=MEDIUM?"
+            sizeMedium.insert(apple, BTree.LEFT);         // Si es mediano → Apple
+            sizeMedium.insert(grape, BTree.RIGHT);        // Si NO es mediano → Grape
 
-        } catch (BTreeException e) {
-            System.out.println(e.getMessage());
+            // Subárbol "color=YELLOW?"
+            colorYellow.insert(shapeRound, BTree.LEFT);   // Si es amarillo → preguntamos si es redondo
+            colorYellow.insert(sizeSmall, BTree.RIGHT);   // Si NO es amarillo → preguntamos si es pequeño
+
+            // Subárbol "shape=ROUND?"
+            shapeRound.insert(lemon, BTree.LEFT);         // Si es redondo → Lemon
+            shapeRound.insert(banana, BTree.RIGHT);       // Si NO es redondo → Banana
+
+            // Subárbol "size=SMALL?"
+            sizeSmall.insert(tasteSweet, BTree.LEFT);     // Si es pequeño → preguntamos si es dulce
+            sizeSmall.insert(orange, BTree.RIGHT);        // Si NO es pequeño → Orange
+
+            // Subárbol "taste=SWEET?"
+            tasteSweet.insert(cherry, BTree.LEFT);        // Si es dulce → Cherry
+            tasteSweet.insert(berry, BTree.RIGHT);        // Si NO es dulce → Berry
+
+            // Un ejemplo
+            System.out.println("Size: " + colorGreen.size());
+            System.out.println("Height: " + colorGreen.height());
+
+        } catch(Exception e) {
+            System.out.println("Exception: " + e.getMessage());
         }
     }
 }
